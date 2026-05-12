@@ -1,0 +1,3 @@
+package.json: declares the project(dependencies);
+    ai: the vercel ai sdk, allows to talk to llms
+    aisdk-google: gemini adapter

@@ -1,5 +1,13 @@
 # TinyCode — Implementation Plan
 
+## Project Vision
+
+A beautiful, lightweight AI coding agent with a polished multi-panel terminal UI.
+Built with Ink/React — clean design, smooth streaming, focused tool preview panel.
+Differentiator: faster, cleaner, content-first vs OpenCode's heavier TUI.
+
+---
+
 ## Step 1 — Project Scaffold
 
 - [x] Initialize git repo
@@ -10,59 +18,112 @@
 - [x] Create AGENTS.md
 - [x] Create PLAN.md
 
-## Step 2 — LLM Client (src/llm.ts)
+## Step 2 — LLM Provider Architecture (src/llm/)
 
-- [ ] Initialize Google Generative AI provider via @ai-sdk/google
-- [ ] Accept model name param (default: gemini-2.0-flash-exp)
-- [ ] Read API key from GOOGLE_API_KEY env var with helpful error if missing
-- [ ] Export `createStream()` returning a streamText result
+Provider-agnostic design: add new providers by dropping a file in `providers/` + one line in `index.ts`.
+
+- [x] Create `src/llm/config.ts` — env var validation with `validateConfig()`, `.env` support
+- [x] Create `src/llm/types.ts` — `LLMProvider` interface, `StreamOptions` type
+- [x] Create `src/llm/providers/gemini.ts` — Gemini provider implementing `LLMProvider`
+- [x] Create `src/llm/index.ts` — registry, `setActive/getActive`, `createStream` factory
+- [x] Create `.env.example` with `GOOGLE_API_KEY=`
+- [x] Verify `.env` is in `.gitignore`
 
 ## Step 3 — Tool Definitions (src/tools/)
 
-- [ ] Create src/tools/index.ts — typed registry as array of Tool objects
-- [ ] Implement src/tools/read.ts — reads file, returns lines with line numbers
-- [ ] Implement src/tools/write.ts — writes string content to path
-- [ ] Implement src/tools/bash.ts — spawns command with timeout, captures stdout/stderr/exit code
-- [ ] Implement src/tools/grep.ts — regex search in files via ripgrep or basic fs read
-- [ ] Each tool: `{ id, description, parameters: ZodSchema, execute(params) => { output, metadata } }`
+- [x] Create src/tools/index.ts — typed registry as array of Tool objects
+- [x] Create src/tools/types.ts — Tool + ToolResult interfaces (locked return contract)
+- [x] Implement src/tools/read.ts — reads file, returns lines with line numbers
+- [x] Implement src/tools/write.ts — writes string content to path
+- [x] Implement src/tools/bash.ts — spawns command with timeout, captures stdout/stderr/exit code
+- [x] Implement src/tools/grep.ts — regex search in files via basic fs read
+- [x] Each tool: `{ id, description, parameters: ZodSchema, execute(params) => { output, metadata } }`
 
 ## Step 4 — Session Management (src/session.ts)
 
-- [ ] Define message types: system, user, assistant (with tool calls)
-- [ ] Session class: push message, get history
-- [ ] Build system prompt (agent identity + tool descriptions + usage rules)
-- [ ] Track token usage across turns
+- [x] Define message types: system, user, assistant (with tool calls)
+- [x] Session class: push message, get history
+- [x] Build system prompt (agent identity + tool descriptions + usage rules)
+- [x] Track token usage across turns
+- [x] Persist sessions to `.tinycode/sessions/` as JSON
+- [x] Load/resume previous sessions
 
 ## Step 5 — Agent Loop (src/agent.ts)
 
-- [ ] Assemble messages: system prompt + prior history + user input
-- [ ] Call streamText with model, messages, tools
-- [ ] Process fullStream events:
-  - text-delta → emit to UI callback
-  - tool-call → execute, emit status to UI
-  - tool-result → append to message history
-  - error → emit to UI
-- [ ] Loop: if tool calls were made, LLM gets another turn; if text-only, done
-- [ ] Return final assistant response text
+- [x] Assemble messages: system prompt + prior history + user input
+- [x] Call streamText with model, messages, tools
+- [x] Process fullStream events:
+  - text-delta → emit to TUI via `onTextDelta` callback
+  - tool-call → execute, emit `onToolCall` status to TUI
+  - tool-result → append to message history, emit `onToolResult`
+  - error → emit `onError` to TUI
+- [x] Loop: if tool calls were made, LLM gets another turn; if text-only, done
+- [x] Return final assistant response text + token usage
 
-## Step 6 — Terminal UI (src/tui.ts)
+## Step 6 — Terminal UI (src/tui/) ✅
 
-- [ ] Readline loop with "> " prompt
-- [ ] Chalk-formatted output:
-  - User messages dim/cyan
-  - Assistant text white/bold
-  - Tool calls yellow italic
-  - Tool results gray
-  - Errors red
-- [ ] Exit on Ctrl+C, Ctrl+D, or "/quit"
-- [ ] Print token usage summary on exit
+### 6a — Install Dependencies
+
+- [x] `bun add ink react` and `@types/react`
+
+### 6b — Theme System (src/tui/theme.ts)
+
+- [x] Define clean color palette: teal/blue accent + neutral grays
+- [x] Support dark/light terminal detection
+- [x] Export theme object consumed by all components
+
+### 6c — App Shell + Layout (src/tui/app.tsx, layout.tsx)
+
+- [x] Root Ink `<App>` component
+- [x] Three-zone layout:
+  - Header (top): model name, token count
+  - Body (middle): horizontal split — conversation | preview
+  - Footer (bottom): input bar + status bar
+- [x] Configurable split ratio
+- [x] Esc to quit
+
+### 6d — Conversation Panel (src/tui/panels/conversation.tsx)
+
+- [x] Scrollable message list (renders bottom-up with overflow clipping)
+- [x] User messages (dim), assistant messages with markdown, tool calls (animated)
+- [x] Markdown rendering: headers, bold, italic, inline code, code blocks, lists
+- [x] Streaming text output via StreamingText component
+- [x] Proper line breaks between blocks (paragraphs, headers, lists, code)
+
+### 6e — Preview Panel (src/tui/panels/preview.tsx)
+
+- [x] Right-side panel, hidden by default (toggled via Ctrl+B)
+- [x] Auto-shows on tool execution
+- [x] Displays tool output (read, write, bash, grep results) with status header
+- [x] Each entry shows tool name, status (spinner/✓/✗), and truncated content
+
+### 6f — Prompt Input (src/tui/components/prompt-input.tsx)
+
+- [x] Single-line input (Shift+Enter inserts newline for multi-line)
+- [x] History navigation (↑/↓) — most recent entries navigated in reverse order
+- [x] Submit on Enter
+- [x] Commands: `/quit`, `/clear`, `/new`, `/connect`
+- [x] `/connect` lists providers or switches with `/connect <name>`
+- [ ] (Future) `/model` command for model variant selection within a provider
+
+### 6g — Streaming Text (src/tui/components/streaming-text.tsx)
+
+- [x] Per-character reveal animation (~15ms interval)
+- [x] Tool call spinners → checkmark/error on completion (via Spinner in conversation.tsx)
+- [x] Blinking cursor indicator while streaming
+- [x] Markdown rendering applied during streaming (not after)
+
+### 6h — Header + Status Bar (src/tui/components/header.tsx, footer.tsx)
+
+- [x] Header: active provider display name + model, running token count
+- [x] Header: token breakdown (in/out/total), context window %, cost estimate
+- [x] Status bar: mode indicator, keybinding hints
 
 ## Step 7 — CLI Entry Point (src/index.ts)
 
 - [ ] Parse args: `[prompt]`, `--model`, `--help`
-- [ ] Mode 1 — one-shot: run prompt, print response, exit
-- [ ] Mode 2 — interactive: start readline TUI loop
-- [ ] Wire TUI → agent → TUI pipeline
+- [ ] Mode 1 — one-shot: run prompt, print plain stdout, exit
+- [ ] Mode 2 — interactive: start Ink TUI
 - [ ] Handle --help with usage text
 
 ## Step 8 — Build & Verify
@@ -74,53 +135,8 @@
 - [ ] Test: `tinycode "find all .ts files with 'export' in them and summarize"`
 - [ ] Run binary from outside repo directory to confirm standalone
 
+---
+
 ## Session Log
 
-### Session 1 (2026-05-11) — Initial Planning
-
-**Completed:**
-
-- AGENTS.md — fully rewritten with project goal, workflow rules, and conventions
-- PLAN.md — created with 8-step implementation plan and checkboxes
-
-**Key decisions made:**
-
-- Language: TypeScript, runtime: Bun
-- LLM: Google Gemini via Vercel AI SDK (@ai-sdk/google)
-- All tools auto-approve (safe since work is scoped to this repo)
-- Terminal UI: minimal readline + chalk (fancy UI deferred)
-- Distribution: single binary via bun --compile
-- Permission model: unrestricted (no path restrictions on write/bash)
-
-**Files changed:**
-
-- `AGENTS.md` — replaced empty-repo boilerplate with full project brief
-- `PLAN.md` — created
-
-**Next step:** Step 1 — Project Scaffold (git init, package.json, tsconfig, bun install)
-
-### Session 2 (2026-05-11) — Project Scaffold
-
-**Completed:**
-
-- git init with .gitignore (node_modules/, dist/, \*.exe, .env)
-- package.json with deps (ai, @ai-sdk/google, zod, chalk) and build script
-- tsconfig.json (strict, ES2022, NodeNext)
-- bun install — all 24 packages resolved
-- AGENTS.md state section updated
-- PLAN.md checkboxes marked done
-
-**Key decisions made:**
-
-- Use full `"C:\Users\Krithik\.bun\bin\bun.exe"` path for Bun commands in this environment
-- Keeping build target as `bun-windows-x64` for Windows binary distribution
-
-**Files changed:**
-
-- `.gitignore` — created
-- `package.json` — created
-- `tsconfig.json` — created
-- `AGENTS.md` — updated State section
-- `PLAN.md` — checkboxes marked, session log added
-
-**Next step:** Step 2 — LLM Client (src/llm.ts)
+Session history has moved to [CHANGELOG.md](./CHANGELOG.md).
