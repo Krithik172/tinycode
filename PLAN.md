@@ -1,6 +1,7 @@
 # TinyCode — Implementation Plan
 
 ## Step 1 — Project Scaffold
+
 - [x] Initialize git repo
 - [x] Create package.json (deps: ai, @ai-sdk/google, zod, chalk)
 - [x] Create tsconfig.json (strict, ES2022, NodeNext module)
@@ -10,12 +11,14 @@
 - [x] Create PLAN.md
 
 ## Step 2 — LLM Client (src/llm.ts)
+
 - [ ] Initialize Google Generative AI provider via @ai-sdk/google
 - [ ] Accept model name param (default: gemini-2.0-flash-exp)
 - [ ] Read API key from GOOGLE_API_KEY env var with helpful error if missing
 - [ ] Export `createStream()` returning a streamText result
 
 ## Step 3 — Tool Definitions (src/tools/)
+
 - [ ] Create src/tools/index.ts — typed registry as array of Tool objects
 - [ ] Implement src/tools/read.ts — reads file, returns lines with line numbers
 - [ ] Implement src/tools/write.ts — writes string content to path
@@ -24,12 +27,14 @@
 - [ ] Each tool: `{ id, description, parameters: ZodSchema, execute(params) => { output, metadata } }`
 
 ## Step 4 — Session Management (src/session.ts)
+
 - [ ] Define message types: system, user, assistant (with tool calls)
 - [ ] Session class: push message, get history
 - [ ] Build system prompt (agent identity + tool descriptions + usage rules)
 - [ ] Track token usage across turns
 
 ## Step 5 — Agent Loop (src/agent.ts)
+
 - [ ] Assemble messages: system prompt + prior history + user input
 - [ ] Call streamText with model, messages, tools
 - [ ] Process fullStream events:
@@ -41,6 +46,7 @@
 - [ ] Return final assistant response text
 
 ## Step 6 — Terminal UI (src/tui.ts)
+
 - [ ] Readline loop with "> " prompt
 - [ ] Chalk-formatted output:
   - User messages dim/cyan
@@ -52,6 +58,7 @@
 - [ ] Print token usage summary on exit
 
 ## Step 7 — CLI Entry Point (src/index.ts)
+
 - [ ] Parse args: `[prompt]`, `--model`, `--help`
 - [ ] Mode 1 — one-shot: run prompt, print response, exit
 - [ ] Mode 2 — interactive: start readline TUI loop
@@ -59,6 +66,7 @@
 - [ ] Handle --help with usage text
 
 ## Step 8 — Build & Verify
+
 - [ ] `bun run build` produces tinycode.exe
 - [ ] Test: `tinycode "say hello in one sentence"`
 - [ ] Test: `tinycode` → interactive, type a message, see response
@@ -71,10 +79,12 @@
 ### Session 1 (2026-05-11) — Initial Planning
 
 **Completed:**
+
 - AGENTS.md — fully rewritten with project goal, workflow rules, and conventions
 - PLAN.md — created with 8-step implementation plan and checkboxes
 
 **Key decisions made:**
+
 - Language: TypeScript, runtime: Bun
 - LLM: Google Gemini via Vercel AI SDK (@ai-sdk/google)
 - All tools auto-approve (safe since work is scoped to this repo)
@@ -83,6 +93,7 @@
 - Permission model: unrestricted (no path restrictions on write/bash)
 
 **Files changed:**
+
 - `AGENTS.md` — replaced empty-repo boilerplate with full project brief
 - `PLAN.md` — created
 
@@ -91,7 +102,8 @@
 ### Session 2 (2026-05-11) — Project Scaffold
 
 **Completed:**
-- git init with .gitignore (node_modules/, dist/, *.exe, .env)
+
+- git init with .gitignore (node_modules/, dist/, \*.exe, .env)
 - package.json with deps (ai, @ai-sdk/google, zod, chalk) and build script
 - tsconfig.json (strict, ES2022, NodeNext)
 - bun install — all 24 packages resolved
@@ -99,10 +111,12 @@
 - PLAN.md checkboxes marked done
 
 **Key decisions made:**
+
 - Use full `"C:\Users\Krithik\.bun\bin\bun.exe"` path for Bun commands in this environment
 - Keeping build target as `bun-windows-x64` for Windows binary distribution
 
 **Files changed:**
+
 - `.gitignore` — created
 - `package.json` — created
 - `tsconfig.json` — created
