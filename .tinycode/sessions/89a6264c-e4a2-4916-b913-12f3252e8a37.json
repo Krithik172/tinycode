@@ -1,0 +1,37 @@
+{
+  "id": "89a6264c-e4a2-4916-b913-12f3252e8a37",
+  "messages": [
+    {
+      "role": "user",
+      "content": "read src/index.ts and tell me what it does"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "2bzcxanzb",
+          "name": "read",
+          "arguments": "{\"path\":\"src/index.ts\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "1: import { render } from \"ink\";\n2: import { createElement } from \"react\";\n3: import { App } from \"./tui/app.js\";\n4: import { runAgent } from \"./agent.js\";\n5: import { Session } from \"./session.js\";\n6: import { setActiveModel } from \"./llm/index.js\";\n7: \n8: const args = process.argv.slice(2);\n9: \n10: if (args.includes(\"--help\") || args.includes(\"-h\")) {\n11:   console.log(`\n12: TinyCode — Lightweight AI Coding Agent\n13: \n14: Usage:\n15:   tinycode [prompt]             One-shot mode: run prompt and print result\n16:   tinycode                      Interactive mode: launch TUI\n17: \n18: Options:\n19:   --model <name>   Set the model variant (e.g., --model gemini-2.0-flash)\n20:   --help, -h       Show this help message\n21: `);\n22:   process.exit(0);\n23: }\n24: \n25: const modelIndex = args.indexOf(\"--model\");\n26: if (modelIndex !== -1 && modelIndex + 1 < args.length) {\n27:   try {\n28:     setActiveModel(args[modelIndex + 1]);\n29:   } catch (e) {\n30:     console.error(`Error: ${(e as Error).message}`);\n31:     process.exit(1);\n32:   }\n33:   args.splice(modelIndex, 2);\n34: }\n35: \n36: const prompt = args.find((a) => !a.startsWith(\"-\"));\n37: \n38: if (prompt) {\n39:   await runOneShot(prompt);\n40: } else {\n41:   await runInteractive();\n42: }\n43: \n44: async function runOneShot(prompt: string): Promise<void> {\n45:   const session = new Session();\n46:   try {\n47:     const result = await runAgent(prompt, session);\n48:     console.log(result.text);\n49:     process.exit(0);\n50:   } catch (e) {\n51:     const msg = e instanceof Error ? e.message : String(e);\n52:     console.error(msg);\n53:     process.exit(1);\n54:   }\n55: }\n56: \n57: async function runInteractive(): Promise<void> {\n58:   const { waitUntilExit } = render(createElement(App), { alternateScreen: true });\n59:   await waitUntilExit();\n60: }\n61: ",
+      "toolCallId": "2bzcxanzb",
+      "toolName": "read"
+    },
+    {
+      "role": "assistant",
+      "content": "The `src/index.ts` file is the main entry point of the TinyCode application. It handles command-line arguments, sets up the application, and runs either in one-shot mode or interactive mode.\n\nIn one-shot mode, it takes a prompt as an argument, runs the prompt through the `runAgent` function, and prints the result to the console.\n\nIn interactive mode, it launches a text-based user interface (TUI) using the `render` function from the `ink` library and the `App` component from `./tui/app.js`.\n\nThe file also includes error handling and support for setting the model variant using the `--model` command-line option."
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 2707,
+    "outputTokens": 151,
+    "totalTokens": 2858
+  },
+  "createdAt": "2026-05-13T10:01:40.912Z",
+  "updatedAt": "2026-05-13T10:01:42.219Z"
+}

@@ -8,7 +8,7 @@ import {
   type ConversationEntry,
 } from "./panels/conversation.js";
 import { PreviewPanel, type PreviewEntry } from "./panels/preview.js";
-import { getActive, setActive, list } from "../llm/index.js";
+import { getActive, setActive, setActiveModel, getActiveModel, list } from "../llm/index.js";
 import { runAgent } from "../agent.js";
 import { Session, type TokenUsage } from "../session.js";
 
@@ -240,11 +240,47 @@ export function App() {
         }
         break;
 
+      case "/model":
+        if (cmd.length >= 2) {
+          const modelName = cmd[1];
+          try {
+            setActiveModel(modelName);
+            forceRender();
+            setStatusText("Ready");
+            addEntry({
+              id: nextId(),
+              type: "assistant",
+              content: `Switched to model: **${modelName}**`,
+            });
+          } catch (e) {
+            addEntry({
+              id: nextId(),
+              type: "assistant",
+              content: `Error: ${(e as Error).message}`,
+            });
+          }
+        } else {
+          const provider = getActive();
+          const msg = provider.models
+            .map(
+              (m, i) =>
+                `${i + 1}. **${m}**${m === getActiveModel() ? " (active)" : ""}`,
+            )
+            .join("\n");
+          addEntry({
+            id: nextId(),
+            type: "assistant",
+            content: `Available models for **${provider.name}**:\n${msg}\n\nType \`/model <name>\` to switch.`,
+          });
+          setStatusText("Ready");
+        }
+        break;
+
       default:
         addEntry({
           id: nextId(),
           type: "assistant",
-          content: `Unknown command: \`${command}\`. Available: \`/quit\`, \`/clear\`, \`/new\`, \`/connect\``,
+          content: `Unknown command: \`${command}\`. Available: \`/quit\`, \`/clear\`, \`/new\`, \`/connect\`, \`/model\``,
         });
         break;
     }
@@ -255,9 +291,9 @@ export function App() {
       header={
         <Header
           providerName={provider.name}
-          modelName={provider.models[0]}
+          modelName={getActiveModel()}
           tokenUsage={tokenUsage}
-          modelConfig={provider.modelConfig?.[provider.models[0]]}
+          modelConfig={provider.modelConfig?.[getActiveModel()]}
         />
       }
       conversationPanel={<ConversationPanel entries={entries} />}

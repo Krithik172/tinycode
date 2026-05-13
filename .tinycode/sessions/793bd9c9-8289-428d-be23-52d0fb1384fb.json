@@ -1,0 +1,24 @@
+{
+  "id": "793bd9c9-8289-428d-be23-52d0fb1384fb",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hello who are you"
+    },
+    {
+      "role": "assistant",
+      "content": "I am TinyCode, a lightweight AI coding agent. I can help with coding tasks, file operations, and other development-related activities. I have access to functions like 'read', 'write', 'bash', and 'grep' to interact with the environment and perform tasks. How can I assist you today?"
+    },
+    {
+      "role": "user",
+      "content": "read the file index.ts and explain to me what it does"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": null,
+    "outputTokens": null,
+    "totalTokens": null
+  },
+  "createdAt": "2026-05-13T10:02:52.676Z",
+  "updatedAt": "2026-05-13T10:03:42.940Z"
+}

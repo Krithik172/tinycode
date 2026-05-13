@@ -30,7 +30,7 @@ export function ConversationPanel({ entries }: ConversationPanelProps) {
   }
 
   return (
-    <Box flexGrow={1} flexDirection="column" paddingX={1} paddingY={1} overflowY="hidden">
+    <Box flexGrow={1} flexDirection="column" paddingX={1} paddingY={1} overflowY="hidden" justifyContent="flex-end">
       {entries.map((entry) => (
         <ConversationBubble key={entry.id} entry={entry} />
       ))}

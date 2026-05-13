@@ -76,9 +76,7 @@ export function PromptInput({ onSubmit }: PromptInputProps) {
       <Text color={isPlaceholder ? c.textMuted : c.text}>
         {displayText}
       </Text>
-      {value.length > 0 && (
-        <Text color={c.primaryDim}>█</Text>
-      )}
+      <Text color={c.primaryDim}>█</Text>
     </Box>
   );
 }

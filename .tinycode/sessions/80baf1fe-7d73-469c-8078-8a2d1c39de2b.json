@@ -1,0 +1,20 @@
+{
+  "id": "80baf1fe-7d73-469c-8078-8a2d1c39de2b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "say hello in one sentence"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello, I'm TinyCode, a lightweight AI coding agent here to assist with your coding needs."
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 1029,
+    "outputTokens": 21,
+    "totalTokens": 1050
+  },
+  "createdAt": "2026-05-13T10:01:33.647Z",
+  "updatedAt": "2026-05-13T10:01:33.916Z"
+}

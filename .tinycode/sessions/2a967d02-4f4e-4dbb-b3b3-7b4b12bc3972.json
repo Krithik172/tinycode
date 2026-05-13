@@ -1,0 +1,16 @@
+{
+  "id": "2a967d02-4f4e-4dbb-b3b3-7b4b12bc3972",
+  "messages": [
+    {
+      "role": "user",
+      "content": "say hello in one sentence"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "totalTokens": 0
+  },
+  "createdAt": "2026-05-13T10:01:08.054Z",
+  "updatedAt": "2026-05-13T10:01:08.054Z"
+}

@@ -22,13 +22,17 @@ interactively or with one-shot prompts, powered by the Vercel AI SDK.
 - Repository scaffold complete: package.json, tsconfig.json, .gitignore
 - Dependencies installed: ai, @ai-sdk/google, zod, chalk, ink, react (Bun v1.3.13)
 - Git repo initialized, no commits yet.
-- LLM provider architecture in place: src/llm/ (config.ts, types.ts, providers/gemini.ts, index.ts)
-- .env.example created with GOOGLE_API_KEY= reference
+- LLM provider architecture in place: src/llm/ (config.ts, types.ts, providers/gemini.ts, providers/groq.ts, index.ts)
+- .env.example created with GOOGLE_API_KEY=, GROQ_API_KEY= references
 - Session management in place: src/session.ts (Message types, Session class, system prompt builder, persistence)
 - Agent loop in place: src/agent.ts (runAgent, tool conversion, fullStream processing, session persistence)
 - Terminal UI in place: src/tui/ (Ink/React multi-panel TUI with conversation, preview, input, streaming)
 - **UI enhancements:** Header now shows token breakdown + context % + cost; markdown renders during streaming; proper line breaks between blocks
-- **Next up:** Step 7 — CLI Entry Point
+- **UI polish:** Thin single-line border on footer (was bold); chat window anchored to bottom with `justifyContent="flex-end"`
+- **Step 7 done:** src/index.ts rewritten as CLI entry point (--help, --model, one-shot, interactive modes)
+- **Groq provider added:** src/llm/providers/groq.ts (OpenAI-compatible, llama-3.3-70b-versatile) — set as default
+- **Step 8 done:** All build and verification tests passing — one-shot, read tool, grep tool, standalone binary
+- **Next up:** Future enhancements / polish
 
 ## Conventions
 

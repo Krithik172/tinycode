@@ -3,7 +3,7 @@ import type { ToolSet, CoreMessage } from "ai";
 import { Session, buildSystemPrompt } from "./session.js";
 import type { Message, TokenUsage } from "./session.js";
 import { tools as toolRegistry } from "./tools/index.js";
-import { createStream, getActive } from "./llm/index.js";
+import { createStream, getActive, getActiveModel } from "./llm/index.js";
 
 // ─── Types ─────────────────────────────────────────────────
 
@@ -103,7 +103,7 @@ export async function runAgent(
     .map(toCoreMessage);
 
   const streamResult = createStream({
-    model: provider.models[0],
+    model: getActiveModel(),
     system: systemPrompt,
     messages: history,
     tools: aiTools,

@@ -1,0 +1,16 @@
+{
+  "id": "b8b16e2d-7102-4fbf-a2b3-cf4076c2c68d",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hello"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "totalTokens": 0
+  },
+  "createdAt": "2026-05-13T09:35:31.654Z",
+  "updatedAt": "2026-05-13T09:35:51.170Z"
+}

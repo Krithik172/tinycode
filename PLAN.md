@@ -25,9 +25,11 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 - [x] Create `src/llm/config.ts` — env var validation with `validateConfig()`, `.env` support
 - [x] Create `src/llm/types.ts` — `LLMProvider` interface, `StreamOptions` type
 - [x] Create `src/llm/providers/gemini.ts` — Gemini provider implementing `LLMProvider`
+- [x] Create `src/llm/providers/groq.ts` — Groq provider (OpenAI-compatible) with `@ai-sdk/openai`
 - [x] Create `src/llm/index.ts` — registry, `setActive/getActive`, `createStream` factory
-- [x] Create `.env.example` with `GOOGLE_API_KEY=`
+- [x] Create `.env.example` with `GOOGLE_API_KEY=`, `GROQ_API_KEY=`
 - [x] Verify `.env` is in `.gitignore`
+- [x] Default provider set to **Groq** (`llama-3.3-70b-versatile`)
 
 ## Step 3 — Tool Definitions (src/tools/)
 
@@ -119,21 +121,24 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 - [x] Header: token breakdown (in/out/total), context window %, cost estimate
 - [x] Status bar: mode indicator, keybinding hints
 
+### 6i — UI Polish
+- [x] Thin footer border (`single` instead of `bold`)
+- [x] Conversation panel anchored to bottom (`justifyContent="flex-end"`)
+
 ## Step 7 — CLI Entry Point (src/index.ts)
 
-- [ ] Parse args: `[prompt]`, `--model`, `--help`
-- [ ] Mode 1 — one-shot: run prompt, print plain stdout, exit
-- [ ] Mode 2 — interactive: start Ink TUI
-- [ ] Handle --help with usage text
+- [x] Parse args: `[prompt]`, `--model`, `--help`
+- [x] Mode 1 — one-shot: run prompt, print plain stdout, exit
+- [x] Mode 2 — interactive: start Ink TUI
+- [x] Handle --help with usage text
 
-## Step 8 — Build & Verify
+## Step 8 — Build & Verify ✅
 
-- [ ] `bun run build` produces tinycode.exe
-- [ ] Test: `tinycode "say hello in one sentence"`
-- [ ] Test: `tinycode` → interactive, type a message, see response
-- [ ] Test: `tinycode "read src/index.ts and tell me what it does"`
-- [ ] Test: `tinycode "find all .ts files with 'export' in them and summarize"`
-- [ ] Run binary from outside repo directory to confirm standalone
+- [x] `bun run build` produces tinycode.exe
+- [x] Test: `tinycode "say hello in one sentence"`
+- [x] Test: `tinycode "read src/index.ts and tell me what it does"` (tool: read)
+- [x] Test: `tinycode "find all .ts files with 'export' in them and summarize"` (tool: grep)
+- [x] Run binary from outside repo directory to confirm standalone
 
 ---
 

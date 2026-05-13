@@ -346,4 +346,69 @@ All session logs for TinyCode development.
 - `src/demo.tsx` — updated Header props
 - `CHANGELOG.md` — updated
 
-**Next step:** Step 7 — CLI Entry Point
+**Next step:** Step 8 — Build & Verify
+
+### Session 15 (2026-05-13) — CLI Entry Point (Step 7)
+
+**Completed:**
+
+- Rewrote `src/index.ts` as full CLI entry point with argument parsing:
+  - `--help`/`-h` flag shows usage text with mode descriptions and options
+  - `--model <name>` flag overrides the default active model
+  - **Mode 1 — one-shot:** positional prompt argument runs agent via `runAgent()`, prints final text to stdout, exits
+  - **Mode 2 — interactive:** no prompt argument launches Ink TUI with `createElement(App)`
+  - Error handling with appropriate exit codes
+- Fixed build: added `react-devtools-core` as optional dependency (required by Ink bundling)
+- Verified `bun build --compile` produces `tinycode.exe` successfully
+
+**Files changed:**
+
+- `src/index.ts` — rewritten from simple TUI render to full CLI entry point
+- `package.json` — added `react-devtools-core` optional dep
+- `PLAN.md` — checked off Step 7 items
+- `CHANGELOG.md` — updated
+
+### Session 16 (2026-05-13) — Groq Provider (default)
+
+**Completed:**
+
+- Installed `@ai-sdk/openai` dependency
+- Created `src/llm/providers/groq.ts` — Groq provider using OpenAI-compatible API:
+  - Uses `createOpenAI()` with `baseURL: "https://api.groq.com/openai/v1"`
+  - Models: `llama-3.3-70b-versatile`, `llama-3.1-8b-instant`, `mixtral-8x7b-32768`
+  - Model configs with context limits and pricing
+- Updated `src/llm/config.ts` — added `groq` to `PROVIDER_ENV` with `GROQ_API_KEY` env var and `keyUrl` for console.groq.com/keys; made config URLs dynamic per-provider
+- Updated `src/llm/index.ts` — registered `groqProvider`, set `setActive("groq")` as default
+- Updated `.env.example` — added `GROQ_API_KEY=`
+- Verified `bun run build` succeeds (323 modules, ~617ms compile)
+
+**Files changed:**
+
+- `src/llm/providers/groq.ts` — created
+- `src/llm/config.ts` — added groq env config, dynamic keyUrl
+- `src/llm/index.ts` — register groq, set as default
+- `.env.example` — added GROQ_API_KEY
+- `package.json` — added @ai-sdk/openai
+- `PLAN.md` — updated Step 2 with Groq provider
+- `AGENTS.md` — updated state
+- `CHANGELOG.md` — updated
+
+### Session 17 (2026-05-13) — Build & Verify (Step 8)
+
+**Completed:**
+
+- Fixed `@ai-sdk/openai` version compatibility (v1.x for ai SDK v4, not v3)
+- Rebuilt `tinycode.exe` successfully
+- Verified all tests pass:
+  - **one-shot:** `tinycode "say hello in one sentence"` → correct response
+  - **read tool:** `tinycode "read src/index.ts and tell me what it does"` → read + summarize
+  - **grep tool:** `tinycode "find all .ts files with 'export' in them and summarize"` → grep + summarize
+  - **standalone:** binary runs from outside repo directory
+- Marked Step 8 complete in PLAN.md
+
+**Files changed:**
+
+- `package.json` — changed @ai-sdk/openai from v3 to v1
+- `PLAN.md` — checked off Step 8 items
+- `AGENTS.md` — updated next step
+- `CHANGELOG.md` — updated

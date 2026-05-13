@@ -30,23 +30,26 @@ export function Header({
       : null;
 
   return (
-    <Box borderStyle="single" borderColor={c.border} paddingX={1}>
-      <Box flexGrow={1}>
-        <Text color={c.primary} bold>
-          tinycode
-        </Text>
-        <Text color={c.textDim}> · </Text>
-        <Text color={c.textDim}>
-          {providerName}/{modelName}
-        </Text>
+    <Box flexDirection="column" width="100%">
+      <Box width="100%" paddingX={1}>
+        <Box flexGrow={1}>
+          <Text color={c.primary} bold>
+            tinycode
+          </Text>
+          <Text color={c.textDim}> · </Text>
+          <Text color={c.textDim}>
+            {providerName}/{modelName}
+          </Text>
+        </Box>
+        <Box flexShrink={0}>
+          <Text color={c.textMuted}>
+            Tokens Used: {formatCount(tokenUsage.totalTokens)}
+            {pct !== null ? ` (${pct.toFixed(1)}%)` : ""}
+            {cost !== null ? ` · $${formatCost(cost)}` : ""}
+          </Text>
+        </Box>
       </Box>
-      <Box>
-        <Text color={c.textMuted}>
-          Tokens Used: {formatCount(tokenUsage.totalTokens)}
-          {pct !== null ? ` (${pct.toFixed(1)}%)` : ""}
-          {cost !== null ? ` · $${formatCost(cost)}` : ""}
-        </Text>
-      </Box>
+      <Box width="100%" height={1} backgroundColor={c.border} />
     </Box>
   );
 }
