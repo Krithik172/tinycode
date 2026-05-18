@@ -2,7 +2,7 @@ import { Box, Text, useInput } from "ink";
 import { useState, useMemo } from "react";
 import { theme } from "../theme.js";
 import { CommandMenu, type MenuItem } from "./command-menu.js";
-import { getAllCommands, type CommandDefinition } from "../commands.js";
+import { getAllCommands, type CommandDefinition } from "../commands/index.js";
 
 interface PromptInputProps {
   onSubmit: (value: string) => void;

@@ -11,7 +11,7 @@ import { PreviewPanel, type PreviewEntry } from "./panels/preview.js";
 import { getActive, setActive, setActiveModel, getActiveModel, list } from "../llm/index.js";
 import { runAgent } from "../agent.js";
 import { Session, type TokenUsage } from "../session.js";
-import { findCommand, getAllCommands, type CommandContext } from "./commands.js";
+import { findCommand, getAllCommands, type CommandContext } from "./commands/index.js";
 
 let idCounter = 0;
 function nextId(): string {
