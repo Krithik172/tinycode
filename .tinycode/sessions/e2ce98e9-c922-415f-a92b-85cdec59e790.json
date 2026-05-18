@@ -1,0 +1,28 @@
+{
+  "id": "e2ce98e9-c922-415f-a92b-85cdec59e790",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to help with your coding tasks. What do you need help with?"
+    },
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm here to assist you with coding tasks. How can I help you today?"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 2078,
+    "outputTokens": 36,
+    "totalTokens": 2114
+  },
+  "createdAt": "2026-05-18T08:03:45.302Z",
+  "updatedAt": "2026-05-18T08:04:04.780Z"
+}
