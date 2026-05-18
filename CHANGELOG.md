@@ -412,3 +412,47 @@ All session logs for TinyCode development.
 - `PLAN.md` — checked off Step 8 items
 - `AGENTS.md` — updated next step
 - `CHANGELOG.md` — updated
+
+### Session 18 (2026-05-18) — Interactive Command Menu
+
+**Completed:**
+
+- Created **`src/tui/commands.ts`** — extensible command registry pattern:
+  - `CommandDefinition` interface with typed `handler(args, context)` — adding a new command = one `registerCommand()` call
+  - `CommandContext` provides app state access (exit, addEntry, resetSession, LLM controls)
+  - Built-in commands: `/quit`, `/exit`, `/clear`, `/new`, `/connect`, `/model`
+  - `/model` and `/connect` expose `getSubmenuItems()` for dynamic submenu data (models/providers fetched live via registry)
+  - No switch statements or manual routing — `handleCommand` just looks up by ID in the registry
+- Created **`src/tui/components/command-menu.tsx`** — interactive list component:
+  - Scrollable bordered popup with selected-item highlight (`▸` + primary color)
+  - Active item indicator (`◄` + success color) for current model/provider
+  - Empty state ("No matching commands") when filter yields no results
+  - Scroll indicators when items exceed max visible
+- Rewrote **`src/tui/components/prompt-input.tsx`** — command mode with filtering + submenus:
+  - Typing `/` at position 0 enters command mode, shows root command menu
+  - Characters after `/` prefix-filter the command list in real-time
+  - ↑/↓ navigates the menu, Enter selects, Esc cancels
+  - Selecting `/model` or `/connect` enters a second-level submenu with live data
+  - Selecting a sub-item constructs the command string and fires `onSubmit`
+  - Root commands with no submenu execute directly on Enter
+- Refactored **`src/tui/app.tsx`** — uses command registry with `CommandContext`:
+  - `handleCommand` now calls `findCommand(cmdLabel)` and delegates to `cmd.handler(args, commandCtx)`
+  - Unknown command fallback lists available commands
+  - `resetSession()` callback wraps all session-reset state changes (clear entries, preview, tokens, session ref)
+- All one-shot and tool-calling smoke tests pass after rebuild
+
+**Key design decisions:**
+- Registry pattern: `registerCommand()` is the single extension point — no need to touch `app.tsx` or `prompt-input.tsx` when adding a command
+- `CommandContext` object closes over React state at call time, ensuring fresh state
+- Commands import LLM module directly for `getSubmenuItems()` (dynamic, always current)
+- No circular dependencies: commands → llm, panels (types only); app → commands
+- `ConversationEntry` type imported only for the type parameter in `addEntry()`
+
+**Files changed:**
+- `src/tui/commands.ts` — created
+- `src/tui/components/command-menu.tsx` — created
+- `src/tui/components/prompt-input.tsx` — rewritten
+- `src/tui/app.tsx` — refactored
+- `PLAN.md` — updated
+- `AGENTS.md` — updated state
+- `CHANGELOG.md` — updated

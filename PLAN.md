@@ -106,7 +106,9 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 - [x] Submit on Enter
 - [x] Commands: `/quit`, `/clear`, `/new`, `/connect`
 - [x] `/connect` lists providers or switches with `/connect <name>`
-- [ ] (Future) `/model` command for model variant selection within a provider
+- [x] `/model` command for model variant selection within a provider
+- [x] **Interactive command menu:** Typing `/` opens a scrollable, filterable list; selecting a command with sub-options (e.g., `/model`, `/connect`) opens a second-level menu with live data; all via ↑/↓ + Enter + Esc
+- [x] **Extensible registry:** `registerCommand()` is the single extension point — add a command definition + handler without touching `app.tsx` or `prompt-input.tsx`
 
 ### 6g — Streaming Text (src/tui/components/streaming-text.tsx)
 

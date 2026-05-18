@@ -1,0 +1,54 @@
+{
+  "id": "f1ce65d8-6a4c-44d9-a73b-229f9e21668d",
+  "messages": [
+    {
+      "role": "user",
+      "content": "run dir /b *.tsx in src/tui/components"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "2ja71tbe2",
+          "name": "bash",
+          "arguments": "{\"command\":\"dir /b *.tsx\",\"description\":\"List tsx files in src/tui/components\",\"timeout\":10000}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "File Not Found",
+      "toolCallId": "2ja71tbe2",
+      "toolName": "bash"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "6veq5zf6t",
+          "name": "bash",
+          "arguments": "{\"command\":\"cd src/tui/components && dir /b *.tsx\",\"description\":\"Change directory and list tsx files\",\"timeout\":10000}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "command-menu.tsx\r\nfooter.tsx\r\nheader.tsx\r\nprompt-input.tsx\r\nspinner.tsx\r\nstreaming-text.tsx\r\n",
+      "toolCallId": "6veq5zf6t",
+      "toolName": "bash"
+    },
+    {
+      "role": "assistant",
+      "content": "The command has successfully listed the tsx files in the src/tui/components directory. The files are:\n\n1. command-menu.tsx\n2. footer.tsx\n3. header.tsx\n4. prompt-input.tsx\n5. spinner.tsx\n6. streaming-text.tsx\n\nThese files are now known to exist in the specified directory."
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 3284,
+    "outputTokens": 148,
+    "totalTokens": 3432
+  },
+  "createdAt": "2026-05-18T09:36:48.683Z",
+  "updatedAt": "2026-05-18T09:36:50.055Z"
+}

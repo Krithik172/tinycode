@@ -11,6 +11,7 @@ import { PreviewPanel, type PreviewEntry } from "./panels/preview.js";
 import { getActive, setActive, setActiveModel, getActiveModel, list } from "../llm/index.js";
 import { runAgent } from "../agent.js";
 import { Session, type TokenUsage } from "../session.js";
+import { findCommand, getAllCommands, type CommandContext } from "./commands.js";
 
 let idCounter = 0;
 function nextId(): string {
@@ -91,6 +92,28 @@ export function App() {
       prev.map((pe) => (pe.id === id ? updater(pe) : pe)),
     );
   }
+
+  const commandCtx: CommandContext = {
+    exit,
+    addEntry,
+    setStatusText,
+    forceRender,
+    nextId,
+    resetSession: () => {
+      setEntries([]);
+      setPreviewEntries([]);
+      setTokenUsage({ inputTokens: 0, outputTokens: 0, totalTokens: 0 });
+      setShowPreview(false);
+      setStatusText("Ready");
+      sessionRef.current = new Session();
+      forceRender();
+    },
+    getActiveLlm: getActive,
+    setActiveLlm: setActive,
+    setActiveModel,
+    getActiveModel,
+    listProviders: list,
+  };
 
   async function handleSubmit(value: string) {
     if (isRunningRef.current) return;
@@ -184,106 +207,25 @@ export function App() {
     }
   }
 
-  async function handleCommand(value: string) {
-    const cmd = value.split(/\s+/);
-    const command = cmd[0].toLowerCase();
+  function handleCommand(value: string) {
+    const parts = value.split(/\s+/);
+    const cmdLabel = parts[0].toLowerCase();
+    const args = parts.slice(1);
 
-    switch (command) {
-      case "/quit":
-      case "/exit":
-        exit();
-        break;
-
-      case "/clear":
-      case "/new":
-        setEntries([]);
-        setPreviewEntries([]);
-        setTokenUsage({ inputTokens: 0, outputTokens: 0, totalTokens: 0 });
-        setShowPreview(false);
-        setStatusText("Ready");
-        sessionRef.current = new Session();
-        break;
-
-      case "/connect":
-        if (cmd.length >= 2) {
-          const name = cmd[1];
-          try {
-            setActive(name);
-            forceRender();
-            setStatusText("Ready");
-            addEntry({
-              id: nextId(),
-              type: "assistant",
-              content: `Switched to provider: **${name}**`,
-            });
-          } catch (e) {
-            addEntry({
-              id: nextId(),
-              type: "assistant",
-              content: `Error: ${(e as Error).message}`,
-            });
-          }
-        } else {
-          const providers = list();
-          const msg = providers
-            .map(
-              (p, i) =>
-                `${i + 1}. **${p.name}** — models: ${p.models.join(", ")}`,
-            )
-            .join("\n");
-          addEntry({
-            id: nextId(),
-            type: "assistant",
-            content: `Available providers:\n${msg}\n\nType \`/connect <name>\` to switch.`,
-          });
-          setStatusText("Ready");
-        }
-        break;
-
-      case "/model":
-        if (cmd.length >= 2) {
-          const modelName = cmd[1];
-          try {
-            setActiveModel(modelName);
-            forceRender();
-            setStatusText("Ready");
-            addEntry({
-              id: nextId(),
-              type: "assistant",
-              content: `Switched to model: **${modelName}**`,
-            });
-          } catch (e) {
-            addEntry({
-              id: nextId(),
-              type: "assistant",
-              content: `Error: ${(e as Error).message}`,
-            });
-          }
-        } else {
-          const provider = getActive();
-          const msg = provider.models
-            .map(
-              (m, i) =>
-                `${i + 1}. **${m}**${m === getActiveModel() ? " (active)" : ""}`,
-            )
-            .join("\n");
-          addEntry({
-            id: nextId(),
-            type: "assistant",
-            content: `Available models for **${provider.name}**:\n${msg}\n\nType \`/model <name>\` to switch.`,
-          });
-          setStatusText("Ready");
-        }
-        break;
-
-      default:
-        addEntry({
-          id: nextId(),
-          type: "assistant",
-          content: `Unknown command: \`${command}\`. Available: \`/quit\`, \`/clear\`, \`/new\`, \`/connect\`, \`/model\``,
-        });
-        break;
+    const cmd = findCommand(cmdLabel);
+    if (cmd) {
+      cmd.handler(args, commandCtx);
+      return;
     }
+
+    const available = getAllCommands()
+      .map((c) => `\`${c.label}\``)
+      .join(", ");
+    addEntry({
+      id: nextId(),
+      type: "assistant",
+      content: `Unknown command: \`${cmdLabel}\`. Available: ${available}`,
+    });
   }
 
   return (

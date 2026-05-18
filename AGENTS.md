@@ -32,6 +32,7 @@ interactively or with one-shot prompts, powered by the Vercel AI SDK.
 - **Step 7 done:** src/index.ts rewritten as CLI entry point (--help, --model, one-shot, interactive modes)
 - **Groq provider added:** src/llm/providers/groq.ts (OpenAI-compatible, llama-3.3-70b-versatile) — set as default
 - **Step 8 done:** All build and verification tests passing — one-shot, read tool, grep tool, standalone binary
+- **Interactive command menu added:** Extensible registry pattern (`registerCommand()`), interactive list on `/`, prefix filtering, submenus for `/model` and `/connect`
 - **Next up:** Future enhancements / polish
 
 ## Conventions
