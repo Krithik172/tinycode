@@ -8,11 +8,21 @@ import {
   type ConversationEntry,
 } from "./panels/conversation.js";
 import { PreviewPanel, type PreviewEntry } from "./panels/preview.js";
-import { getActive, setActive, setActiveModel, getActiveModel, list } from "../llm/index.js";
+import {
+  getActive,
+  setActive,
+  setActiveModel,
+  getActiveModel,
+  list,
+} from "../llm/index.js";
 import { runAgent } from "../agent.js";
 import { Session, type TokenUsage } from "../session.js";
 import { useTerminalFocus } from "./hooks/use-terminal-focus.js";
-import { findCommand, getAllCommands, type CommandContext } from "./commands/index.js";
+import {
+  findCommand,
+  getAllCommands,
+  type CommandContext,
+} from "./commands/index.js";
 
 let idCounter = 0;
 function nextId(): string {
@@ -44,7 +54,7 @@ export function App() {
       exit();
     }
     if (key.ctrl && (input === "\x02" || input === "b" || input === "B")) {
-      setShowPreview(false);
+      setShowPreview((prev) => !prev);
     }
   });
 
@@ -77,9 +87,7 @@ export function App() {
     id: string,
     updater: (e: ConversationEntry) => ConversationEntry,
   ) {
-    setEntries((prev) =>
-      prev.map((e) => (e.id === id ? updater(e) : e)),
-    );
+    setEntries((prev) => prev.map((e) => (e.id === id ? updater(e) : e)));
   }
 
   function addPreviewEntry(pe: PreviewEntry) {
@@ -186,9 +194,7 @@ export function App() {
           );
           setPreviewEntries((prev) =>
             prev.map((pe) =>
-              pe.status === "running"
-                ? { ...pe, status: "error" }
-                : pe,
+              pe.status === "running" ? { ...pe, status: "error" } : pe,
             ),
           );
         },
@@ -199,9 +205,7 @@ export function App() {
 
       setEntries((prev) =>
         prev.map((e) =>
-          e.id === assistantIdRef.current
-            ? { ...e, isStreaming: false }
-            : e,
+          e.id === assistantIdRef.current ? { ...e, isStreaming: false } : e,
         ),
       );
     } catch {
@@ -213,25 +217,6 @@ export function App() {
   }
 
   async function handleCommand(value: string) {
-    const cmd = value.split(/\s+/);
-    const command = cmd[0].toLowerCase();
-
-    switch (command) {
-      case "/quit":
-      case "/exit":
-        exit();
-        break;
-
-      case "/clear":
-      case "/new":
-        setEntries([]);
-        setPreviewEntries([]);
-        setTokenUsage({ inputTokens: 0, outputTokens: 0, totalTokens: 0 });
-        setShowPreview(true);
-        setStatusText("Ready");
-        sessionRef.current = new Session();
-        break;
-  function handleCommand(value: string) {
     const parts = value.split(/\s+/);
     const cmdLabel = parts[0].toLowerCase();
     const args = parts.slice(1);
@@ -264,7 +249,13 @@ export function App() {
       }
       conversationPanel={<ConversationPanel entries={entries} />}
       previewPanel={<PreviewPanel entries={previewEntries} />}
-      footer={<Footer statusText={statusText} onSubmit={handleSubmit} isActive={isInputActive && terminalFocused} />}
+      footer={
+        <Footer
+          statusText={statusText}
+          onSubmit={handleSubmit}
+          isActive={isInputActive && terminalFocused}
+        />
+      }
       showPreview={showPreview}
     />
   );
