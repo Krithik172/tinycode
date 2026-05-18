@@ -1,0 +1,28 @@
+{
+  "id": "10e20a97-5969-4afa-aacc-56fc381fc7fd",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to help with your coding tasks. What do you need help with?"
+    },
+    {
+      "role": "user",
+      "content": "give me an introduction about yourself. then tell me what all tasks you can do. what LLM providers can you use?"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm TinyCode, a lightweight AI coding agent designed to assist with various coding tasks. I'm here to help with writing, reading, and executing code, as well as providing information and answering questions related to programming.\n\nI can perform the following tasks:\n\n1. **Read files**: I can read files and return their contents with line numbers, supporting optional offset and limit to read specific sections.\n2. **Write files**: I can write string content to a file, creating parent directories if they don't exist, and overwriting existing files.\n3. **Execute shell commands**: I can execute shell commands with a timeout, capturing stdout, stderr, and exit code, which is useful for file operations, git, npm, and other terminal tasks.\n4. **Search code**: I can search file contents using a regular expression, returning matching files with line numbers and context, while skipping node_modules and hidden directories by default.\n\nAs for LLM (Large Language Model) providers, I'm currently integrated with the following:\n\n1. **Brave Search**: I can use Brave Search to find information and answer questions related to programming and other topics.\n\nPlease let me know how I can assist you with your coding tasks or provide information on a specific topic."
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 2102,
+    "outputTokens": 269,
+    "totalTokens": 2371
+  },
+  "createdAt": "2026-05-15T13:47:04.251Z",
+  "updatedAt": "2026-05-15T13:47:49.831Z"
+}

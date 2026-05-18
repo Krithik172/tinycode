@@ -19,6 +19,7 @@ export interface ThemeColors {
   inputBg: string;
   statusBar: string;
   statusBarText: string;
+  userMessageBg: string;
 }
 
 export interface Theme {
@@ -58,6 +59,7 @@ const darkColors: ThemeColors = {
   inputBg: "#191E2A",
   statusBar: "#0D9488",
   statusBarText: "#042F2E",
+  userMessageBg: "#1A2744",
 };
 
 const lightColors: ThemeColors = {
@@ -81,6 +83,7 @@ const lightColors: ThemeColors = {
   inputBg: "#F1F5F9",
   statusBar: "#14B8A6",
   statusBarText: "#FFFFFF",
+  userMessageBg: "#E8F0FE",
 };
 
 export const theme: Theme = {

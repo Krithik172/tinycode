@@ -1,6 +1,8 @@
 import { render } from "ink";
 import { createElement } from "react";
 import { App } from "./tui/app.js";
+import { TerminalFocusProvider } from "./tui/hooks/use-terminal-focus.js";
+import { enableFocusFilter } from "./tui/hooks/focus-filter.js";
 import { runAgent } from "./agent.js";
 import { Session } from "./session.js";
 import { setActiveModel } from "./llm/index.js";
@@ -55,6 +57,17 @@ async function runOneShot(prompt: string): Promise<void> {
 }
 
 async function runInteractive(): Promise<void> {
-  const { waitUntilExit } = render(createElement(App), { alternateScreen: true });
+  const stdin = enableFocusFilter();
+  const { waitUntilExit } = render(
+    createElement(TerminalFocusProvider, null, createElement(App)),
+    {
+      stdin,
+      alternateScreen: true,
+      kittyKeyboard: {
+        mode: "auto",
+        flags: ["disambiguateEscapeCodes"],
+      },
+    },
+  );
   await waitUntilExit();
 }

@@ -1,4 +1,5 @@
-import { Box, Text } from "ink";
+import { Box, Text, useStdout, useInput } from "ink";
+import { useState, useEffect } from "react";
 import { theme } from "../theme.js";
 import { StreamingText } from "../components/streaming-text.js";
 import { Spinner } from "../components/spinner.js";
@@ -20,20 +21,51 @@ interface ConversationPanelProps {
 
 export function ConversationPanel({ entries }: ConversationPanelProps) {
   const c = theme.colors;
+  const { stdout } = useStdout();
+  const HEADER_HEIGHT = 2;
+  const FOOTER_HEIGHT = 3;
+  const panelHeight = Math.max(1, stdout.rows - HEADER_HEIGHT - FOOTER_HEIGHT);
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  useEffect(() => {
+    if (isAtBottom) {
+      setScrollOffset(0);
+    }
+  }, [entries.length]);
+
+  useInput((_input, key) => {
+    if (key.pageUp) {
+      setScrollOffset((prev) => prev + Math.floor(panelHeight / 2));
+      setIsAtBottom(false);
+    }
+    if (key.pageDown) {
+      const next = Math.max(0, scrollOffset - Math.floor(panelHeight / 2));
+      setScrollOffset(next);
+      if (next === 0) setIsAtBottom(true);
+    }
+  });
 
   if (entries.length === 0) {
     return (
-      <Box flexGrow={1} paddingX={1} paddingY={1}>
+      <Box height={panelHeight} paddingX={1} paddingY={1}>
         <Text color={c.textMuted}>Ready — start a conversation</Text>
       </Box>
     );
   }
 
   return (
-    <Box flexGrow={1} flexDirection="column" paddingX={1} paddingY={1} overflowY="hidden" justifyContent="flex-end">
-      {entries.map((entry) => (
-        <ConversationBubble key={entry.id} entry={entry} />
-      ))}
+    <Box height={panelHeight} flexDirection="column" paddingX={1} paddingY={1} overflowY="hidden">
+      <Box
+        flexDirection="column"
+        justifyContent={isAtBottom ? "flex-end" : "flex-start"}
+        marginTop={isAtBottom ? 0 : scrollOffset}
+        flexGrow={1}
+      >
+        {entries.map((entry) => (
+          <ConversationBubble key={entry.id} entry={entry} />
+        ))}
+      </Box>
     </Box>
   );
 }
@@ -44,15 +76,20 @@ function ConversationBubble({ entry }: { entry: ConversationEntry }) {
   switch (entry.type) {
     case "user":
       return (
-        <Box>
-          <Text color={c.textDim}>  </Text>
-          <Text color={c.userMessage}>{entry.content}</Text>
+        <Box width="100%" justifyContent="flex-end" marginBottom={1}>
+          <Box
+            backgroundColor={c.userMessageBg}
+            paddingX={1}
+            paddingY={0}
+          >
+            <Text color={c.text}>{entry.content}</Text>
+          </Box>
         </Box>
       );
 
     case "assistant":
       return (
-        <Box flexDirection="column">
+        <Box flexDirection="column" marginBottom={1}>
           {entry.isStreaming ? (
             <StreamingText
               text={entry.content}
@@ -68,7 +105,7 @@ function ConversationBubble({ entry }: { entry: ConversationEntry }) {
 
     case "tool":
       return (
-        <Box>
+        <Box marginBottom={1}>
           <Text color={c.toolCall}>
             {"  "}
             {entry.toolStatus === "running" ? (

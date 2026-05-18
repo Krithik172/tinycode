@@ -6,8 +6,10 @@ import { getAllCommands, type CommandDefinition } from "../commands/index.js";
 
 interface PromptInputProps {
   onSubmit: (value: string) => void;
+  isActive: boolean;
 }
 
+export function PromptInput({ onSubmit, isActive }: PromptInputProps) {
 type Mode = "text" | "command";
 type MenuLevel = "root" | "sub";
 
@@ -41,6 +43,8 @@ export function PromptInput({ onSubmit }: PromptInputProps) {
   );
 
   useInput((char, key) => {
+    if (!isActive) return;
+    if (key.escape) return;
     if (key.escape) {
       if (mode === "command") {
         if (menuLevel === "sub") {
@@ -211,6 +215,33 @@ export function PromptInput({ onSubmit }: PromptInputProps) {
     }
   });
 
+  const lines = value.split("\n");
+  const isEmpty = value.length === 0;
+  const cursor = isActive ? (
+    <Text color={c.primaryDim}>█</Text>
+  ) : (
+    <Text color={c.textMuted}>▯</Text>
+  );
+
+  return (
+    <Box flexDirection="column" width="100%">
+      {isEmpty ? (
+        <Box flexDirection="row">
+          <Text color={c.primary} bold>{">"}</Text>
+          <Text> </Text>
+          <Text color={c.textMuted}>type a message...</Text>
+          {cursor}
+        </Box>
+      ) : (
+        lines.map((line, i) => (
+          <Box key={i} flexDirection="row">
+            <Text color={c.primary} bold>{i === 0 ? ">" : " "}</Text>
+            <Text> </Text>
+            <Text color={c.text}>{line}</Text>
+            {i === lines.length - 1 && cursor}
+          </Box>
+        ))
+      )}
   const displayText = (() => {
     if (mode === "command") {
       if (menuLevel === "sub") {
