@@ -1,0 +1,28 @@
+{
+  "id": "5aa2c038-340f-4822-822c-a6860dd4694d",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi!"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to help with your coding tasks. What do you need help with?"
+    },
+    {
+      "role": "user",
+      "content": "do you know aswath"
+    },
+    {
+      "role": "assistant",
+      "content": "Aswath Damodaran is a well-known finance professor at New York University's Stern School of Business. He's an expert in valuation, corporate finance, and investment analysis. Is there something specific you'd like to know about his work or teachings?"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 2085,
+    "outputTokens": 70,
+    "totalTokens": 2155
+  },
+  "createdAt": "2026-05-18T09:37:30.238Z",
+  "updatedAt": "2026-05-18T09:37:39.556Z"
+}
