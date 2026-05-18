@@ -1,3 +1,6 @@
 package.json: declares the project(dependencies);
     ai: the vercel ai sdk, allows to talk to llms
     aisdk-google: gemini adapter
+
+bun build src/index.ts --compile --outfile tinycode.exe
+cp tinycode.exe $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\
