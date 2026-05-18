@@ -11,6 +11,7 @@ import { PreviewPanel, type PreviewEntry } from "./panels/preview.js";
 import { getActive, setActive, setActiveModel, getActiveModel, list } from "../llm/index.js";
 import { runAgent } from "../agent.js";
 import { Session, type TokenUsage } from "../session.js";
+import { useTerminalFocus } from "./hooks/use-terminal-focus.js";
 
 let idCounter = 0;
 function nextId(): string {
@@ -24,6 +25,7 @@ export function App() {
   const sessionRef = useRef(new Session());
   const isRunningRef = useRef(false);
   const assistantIdRef = useRef("");
+  const terminalFocused = useTerminalFocus();
 
   const [entries, setEntries] = useState<ConversationEntry[]>([]);
   const [previewEntries, setPreviewEntries] = useState<PreviewEntry[]>([]);
@@ -33,14 +35,15 @@ export function App() {
     totalTokens: 0,
   });
   const [statusText, setStatusText] = useState("Ready");
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
+  const [isInputActive, setIsInputActive] = useState(true);
 
   useInput((input, key) => {
     if (key.escape) {
       exit();
     }
     if (key.ctrl && (input === "\x02" || input === "b" || input === "B")) {
-      setShowPreview((p) => !p);
+      setShowPreview(false);
     }
   });
 
@@ -101,6 +104,7 @@ export function App() {
     }
 
     isRunningRef.current = true;
+    setIsInputActive(false);
     const session = sessionRef.current;
 
     addEntry({
@@ -181,6 +185,7 @@ export function App() {
       setStatusText("Error occurred");
     } finally {
       isRunningRef.current = false;
+      setIsInputActive(true);
     }
   }
 
@@ -199,7 +204,7 @@ export function App() {
         setEntries([]);
         setPreviewEntries([]);
         setTokenUsage({ inputTokens: 0, outputTokens: 0, totalTokens: 0 });
-        setShowPreview(false);
+        setShowPreview(true);
         setStatusText("Ready");
         sessionRef.current = new Session();
         break;
@@ -298,7 +303,7 @@ export function App() {
       }
       conversationPanel={<ConversationPanel entries={entries} />}
       previewPanel={<PreviewPanel entries={previewEntries} />}
-      footer={<Footer statusText={statusText} onSubmit={handleSubmit} />}
+      footer={<Footer statusText={statusText} onSubmit={handleSubmit} isActive={isInputActive && terminalFocused} />}
       showPreview={showPreview}
     />
   );

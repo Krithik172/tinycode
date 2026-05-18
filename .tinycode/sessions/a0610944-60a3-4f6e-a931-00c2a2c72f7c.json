@@ -1,0 +1,62 @@
+{
+  "id": "a0610944-60a3-4f6e-a931-00c2a2c72f7c",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hello tinycode"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to assist with coding tasks. What would you like help with?"
+    },
+    {
+      "role": "user",
+      "content": "can you read a file if i give you the path"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "fbejabbyz",
+          "name": "read",
+          "arguments": "{\"path\":\"path_to_your_file\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "Error: file not found at \"path_to_your_file\"",
+      "toolCallId": "fbejabbyz",
+      "toolName": "read"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "pgxzevmqb",
+          "name": "read",
+          "arguments": "{\"path\":\"/home/user/example.txt\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "Error: file not found at \"/home/user/example.txt\"",
+      "toolCallId": "pgxzevmqb",
+      "toolName": "read"
+    },
+    {
+      "role": "assistant",
+      "content": "Please provide the actual path to the file you want to read. I'll be happy to assist you with reading the file using the 'read' function."
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 4338,
+    "outputTokens": 81,
+    "totalTokens": 4419
+  },
+  "createdAt": "2026-05-15T13:51:29.207Z",
+  "updatedAt": "2026-05-15T13:51:45.049Z"
+}

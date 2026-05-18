@@ -4,15 +4,17 @@ import { theme } from "../theme.js";
 
 interface PromptInputProps {
   onSubmit: (value: string) => void;
+  isActive: boolean;
 }
 
-export function PromptInput({ onSubmit }: PromptInputProps) {
+export function PromptInput({ onSubmit, isActive }: PromptInputProps) {
   const [value, setValue] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
   const c = theme.colors;
 
   useInput((char, key) => {
+    if (!isActive) return;
     if (key.escape) return;
 
     if (key.return && !key.shift) {
@@ -64,19 +66,33 @@ export function PromptInput({ onSubmit }: PromptInputProps) {
     }
   });
 
-  const displayText = value || "type a message...";
-  const isPlaceholder = value.length === 0;
+  const lines = value.split("\n");
+  const isEmpty = value.length === 0;
+  const cursor = isActive ? (
+    <Text color={c.primaryDim}>█</Text>
+  ) : (
+    <Text color={c.textMuted}>▯</Text>
+  );
 
   return (
-    <Box flexDirection="row" width="100%">
-      <Text color={c.primary} bold>
-        {">"}
-      </Text>
-      <Text> </Text>
-      <Text color={isPlaceholder ? c.textMuted : c.text}>
-        {displayText}
-      </Text>
-      <Text color={c.primaryDim}>█</Text>
+    <Box flexDirection="column" width="100%">
+      {isEmpty ? (
+        <Box flexDirection="row">
+          <Text color={c.primary} bold>{">"}</Text>
+          <Text> </Text>
+          <Text color={c.textMuted}>type a message...</Text>
+          {cursor}
+        </Box>
+      ) : (
+        lines.map((line, i) => (
+          <Box key={i} flexDirection="row">
+            <Text color={c.primary} bold>{i === 0 ? ">" : " "}</Text>
+            <Text> </Text>
+            <Text color={c.text}>{line}</Text>
+            {i === lines.length - 1 && cursor}
+          </Box>
+        ))
+      )}
     </Box>
   );
 }

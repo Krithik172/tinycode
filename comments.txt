@@ -1,3 +1,19 @@
-package.json: declares the project(dependencies);
-    ai: the vercel ai sdk, allows to talk to llms
-    aisdk-google: gemini adapter
+git checkout -b chat-input        # create + switch to new branch
+# do your work/edits...
+git add .
+git commit -m "fix: chat input update"
+git push origin chat-input        # push the branch to GitHub
+
+git checkout main
+git pull
+git branch -d chat-input          # delete the local branch, no longer needed
+
+bun build src/index.ts --compile --outfile tinycode.exe
+cp tinycode.exe $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\
+
+# Good GitHub habits:
+1. Write descriptive commit messages
+2. Use branches for new features and bug fixes
+3. Regularly push changes to remote repository
+4. Use pull requests for code review
+5. Keep repository organized with clear folder structure

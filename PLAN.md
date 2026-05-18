@@ -94,10 +94,11 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 
 ### 6e — Preview Panel (src/tui/panels/preview.tsx)
 
-- [x] Right-side panel, hidden by default (toggled via Ctrl+B)
-- [x] Auto-shows on tool execution
+- [x] Right-side panel, always visible by default
+- [x] Auto-shows on tool execution (re-opens if closed via Ctrl+B)
 - [x] Displays tool output (read, write, bash, grep results) with status header
 - [x] Each entry shows tool name, status (spinner/✓/✗), and truncated content
+- [x] Ctrl+B closes the preview panel
 
 ### 6f — Prompt Input (src/tui/components/prompt-input.tsx)
 
@@ -124,6 +125,10 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 ### 6i — UI Polish
 - [x] Thin footer border (`single` instead of `bold`)
 - [x] Conversation panel anchored to bottom (`justifyContent="flex-end"`)
+- [x] User messages right-aligned with background-fill bubble (no border)
+- [x] Assistant messages left-aligned, no box (clean markdown)
+- [x] Multi-line input via Shift+Enter, each line rendered separately
+- [x] Chat scrolling with PageUp/PageDown (dual-mode: flex-end for bottom, offset for scroll)
 
 ## Step 7 — CLI Entry Point (src/index.ts)
 
@@ -139,6 +144,16 @@ Provider-agnostic design: add new providers by dropping a file in `providers/` +
 - [x] Test: `tinycode "read src/index.ts and tell me what it does"` (tool: read)
 - [x] Test: `tinycode "find all .ts files with 'export' in them and summarize"` (tool: grep)
 - [x] Run binary from outside repo directory to confirm standalone
+
+## Step 9 — UI Polish & Scroll ✅
+
+- [x] Chat-style message layout: user messages right-aligned with background fill, assistant left-aligned
+- [x] Multi-line prompt input with proper line-by-line display (Shift+Enter only)
+- [x] Kitty keyboard protocol enabled for disambiguated modifier keys
+- [x] Remove border from user message bubble, keep shaded background only
+- [x] Add `overflow="hidden"` to root layout to prevent overflow past terminal boundary
+- [x] Fixed-height conversation panel computed from terminal rows
+- [x] Chat scrolling with PageUp/PageDown — older messages revealed at top via scroll offset
 
 ---
 

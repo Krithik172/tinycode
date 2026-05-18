@@ -29,9 +29,15 @@ interactively or with one-shot prompts, powered by the Vercel AI SDK.
 - Terminal UI in place: src/tui/ (Ink/React multi-panel TUI with conversation, preview, input, streaming)
 - **UI enhancements:** Header now shows token breakdown + context % + cost; markdown renders during streaming; proper line breaks between blocks
 - **UI polish:** Thin single-line border on footer (was bold); chat window anchored to bottom with `justifyContent="flex-end"`
+- **Chat bubble layout:** User messages right-aligned with background-fill bubble; assistant messages left-aligned, no box
+- **Multi-line input:** Shift+Enter / Ctrl+Enter inserts newline; each line rendered separately with `>` prefix on first
+- **Chat scrolling:** PageUp/PageDown to scroll through history; auto-scroll on new messages when at bottom
+- **Overflow fix:** Root layout has `overflow="hidden"`; conversation panel uses fixed computed height
 - **Step 7 done:** src/index.ts rewritten as CLI entry point (--help, --model, one-shot, interactive modes)
 - **Groq provider added:** src/llm/providers/groq.ts (OpenAI-compatible, llama-3.3-70b-versatile) — set as default
 - **Step 8 done:** All build and verification tests passing — one-shot, read tool, grep tool, standalone binary
+- **Step 9 done:** UI polish — chat bubbles, multi-line input, scrolling, overflow fix
+- **Preview panel:** Always visible by default, Ctrl+B to close; decorative separator line between chat and preview
 - **Next up:** Future enhancements / polish
 
 ## Conventions

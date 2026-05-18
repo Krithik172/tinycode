@@ -1,0 +1,20 @@
+{
+  "id": "d8bd1135-7ac2-4ce3-99ca-b7074fc9a87a",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm ready to help with your coding tasks. What do you need help with?"
+    }
+  ],
+  "tokenUsage": {
+    "inputTokens": 1025,
+    "outputTokens": 18,
+    "totalTokens": 1043
+  },
+  "createdAt": "2026-05-15T13:46:42.333Z",
+  "updatedAt": "2026-05-15T13:46:44.482Z"
+}

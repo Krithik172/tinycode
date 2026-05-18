@@ -1,7 +1,10 @@
-import { Box, useStdout } from "ink";
+import { Box, useStdout, Text } from "ink";
 import { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { theme } from "./theme.js";
+
+const headerHeight = 3;
+const footerHeight = 3;
 
 interface LayoutProps {
   header: ReactNode;
@@ -20,7 +23,6 @@ export function Layout({
   splitRatio = 0.72,
   showPreview = false,
 }: LayoutProps) {
-  const c = theme.colors;
   const { stdout } = useStdout();
   const [rows, setRows] = useState(() => stdout.rows ?? 24);
 
@@ -36,7 +38,7 @@ export function Layout({
   }, [stdout]);
 
   return (
-    <Box flexDirection="column" height={rows}>
+    <Box flexDirection="column" height={rows} overflow="hidden">
       <Box flexShrink={0}>{header}</Box>
       <Box flexGrow={1} flexBasis={0} flexDirection="row" overflow="hidden">
         <Box
@@ -50,7 +52,7 @@ export function Layout({
         </Box>
         {showPreview && (
           <>
-            <Box width={1} backgroundColor={c.border} />
+            <Separator />
             <Box
               flexBasis={`${Math.round((1 - splitRatio) * 100)}%`}
               flexShrink={0}
@@ -66,6 +68,29 @@ export function Layout({
       <Box flexShrink={0} alignSelf="flex-end" width="100%">
         {footer}
       </Box>
+    </Box>
+  );
+}
+
+function Separator() {
+  const c = theme.colors;
+  const { stdout } = useStdout();
+  const rows = stdout.rows ?? 24;
+  const bodyRows = rows - headerHeight - footerHeight;
+  const line = "\u2502";
+
+  const separatorLines = [];
+  for (let i = 0; i < bodyRows; i++) {
+    separatorLines.push(
+      <Text key={`sep-${i}`} color={c.textDim}>
+        {line}
+      </Text>
+    );
+  }
+
+  return (
+    <Box flexDirection="column" width={1} flexShrink={0} overflow="hidden">
+      {separatorLines}
     </Box>
   );
 }

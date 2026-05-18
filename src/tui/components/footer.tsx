@@ -5,9 +5,10 @@ import { PromptInput } from "./prompt-input.js";
 interface FooterProps {
   statusText: string;
   onSubmit: (value: string) => void;
+  isActive: boolean;
 }
 
-export function Footer({ statusText, onSubmit }: FooterProps) {
+export function Footer({ statusText, onSubmit, isActive }: FooterProps) {
   const c = theme.colors;
 
   return (
@@ -15,7 +16,7 @@ export function Footer({ statusText, onSubmit }: FooterProps) {
       <Box width="100%" height={1} backgroundColor={c.border} />
       <Box flexDirection="row" paddingX={1} backgroundColor={c.inputBg}>
         <Box flexGrow={1}>
-          <PromptInput onSubmit={onSubmit} />
+          <PromptInput onSubmit={onSubmit} isActive={isActive} />
         </Box>
       </Box>
       <Box flexDirection="row" paddingX={1} minHeight={1}>
@@ -23,7 +24,7 @@ export function Footer({ statusText, onSubmit }: FooterProps) {
           <Text color={c.textMuted}>{statusText}</Text>
         </Box>
         <Box>
-          <Text color={c.textMuted}>Ctrl+B preview · / commands · Esc quit</Text>
+          <Text color={c.textMuted}>Ctrl+B close preview · / commands · Esc quit</Text>
         </Box>
       </Box>
     </Box>
