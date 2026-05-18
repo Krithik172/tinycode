@@ -38,6 +38,7 @@ interactively or with one-shot prompts, powered by the Vercel AI SDK.
 - **Step 8 done:** All build and verification tests passing — one-shot, read tool, grep tool, standalone binary
 - **Step 9 done:** UI polish — chat bubbles, multi-line input, scrolling, overflow fix
 - **Preview panel:** Always visible by default, Ctrl+B to close; decorative separator line between chat and preview
+- **Cursor focus awareness:** Filled teal `█` when terminal is focused and agent is idle; hollow gray `▯` when terminal loses focus or agent is running. Focus sequences (`\x1b[I`/`\x1b[O`) are stripped at the byte level by `FocusFilterStream` in `src/tui/hooks/focus-filter.ts` before Ink reads them. The filter wraps stdin in a PassThrough stream, delegates `ref`/`unref`/`setRawMode`/`isTTY` to the underlying `process.stdin` with safe optional chaining for Windows/Bun compatibility.
 - **Next up:** Future enhancements / polish
 
 ## Conventions
